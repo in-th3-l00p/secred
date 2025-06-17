@@ -1,19 +1,11 @@
-use std::net::SocketAddr;
-use std::convert::Infallible;
+mod service;
 
-use http_body_util::Full;
+use std::net::SocketAddr;
 use tokio::net::TcpListener;
-use hyper::body::Bytes;
 use hyper::server::conn::http1;
 use hyper::service::service_fn;
-use hyper::{Request, Response};
 use hyper_util::rt::TokioIo;
-
-async fn service(req: Request<hyper::body::Incoming>) ->
-    Result<Response<Full<Bytes>>, Infallible>
-{
-    Ok(Response::new(Full::new(Bytes::from("hello"))))
-}
+use service::main_service;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
@@ -26,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         tokio::task::spawn(async move {
             if let Err(err) = 
                 http1::Builder::new()
-                    .serve_connection(io, service_fn(service))
+                    .serve_connection(io, service_fn(main_service))
                     .await
             {
                 eprintln!("error serving: {:?}", err);
