@@ -2,6 +2,7 @@ mod router;
 
 use std::pin::Pin;
 use http_body_util::combinators::BoxBody;
+use http_body_util::Full;
 use hyper::body::{Bytes};
 use hyper::{Request, Response};
 use hyper::service::Service;
@@ -24,7 +25,7 @@ impl App {
 }
 
 impl Service<Request<hyper::body::Incoming>> for App {
-    type Response = Response<BoxBody<Bytes, BoxError>>;
+    type Response = Response<Full<Bytes>>;
     type Error = BoxError;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
 
