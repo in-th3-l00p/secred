@@ -1,13 +1,12 @@
 mod router;
 
-use std::pin::Pin;
-use http_body_util::combinators::BoxBody;
-use http_body_util::Full;
-use hyper::body::{Bytes};
-use hyper::{Request, Response};
-use hyper::service::Service;
-use sqlx::PgPool;
 use crate::app::router::router;
+use http_body_util::Full;
+use hyper::body::Bytes;
+use hyper::service::Service;
+use hyper::{Request, Response};
+use sqlx::PgPool;
+use std::pin::Pin;
 
 pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
 
