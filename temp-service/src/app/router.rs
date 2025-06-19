@@ -2,9 +2,11 @@ use http_body_util::combinators::BoxBody;
 use http_body_util::{BodyExt, Empty};
 use hyper::{Request, Response, StatusCode};
 use hyper::body::Bytes;
+use crate::app::BoxError;
 
-pub async fn router(req: Request<hyper::body::Incoming>)
-                    -> Result<Response<BoxBody<Bytes, hyper::Error>>, hyper::Error>
+pub async fn router(
+    req: Request<hyper::body::Incoming>
+) -> Result<Response<BoxBody<Bytes, BoxError>>, BoxError>
 {
     match (req.method(), req.uri().path()) {
         _ => {
