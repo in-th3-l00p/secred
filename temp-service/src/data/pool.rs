@@ -9,5 +9,10 @@ pub async fn initialize_pool() -> PgPool {
         .await
         .expect("failed to connect to database");
     println!("database initialized");
+    sqlx::migrate!("./migrations")
+        .run(&pool)
+        .await
+        .expect("failed to migrate");
+    println!("database migrated");
     pool
 }
