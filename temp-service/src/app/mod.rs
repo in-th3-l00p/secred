@@ -7,6 +7,7 @@ use hyper::service::Service;
 use hyper::{Request, Response};
 use sqlx::PgPool;
 use std::pin::Pin;
+use crate::data::service::link_service::LinkService;
 
 pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
 
@@ -15,11 +16,13 @@ pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
 #[derive(Clone)]
 pub struct App {
     pg_pool: PgPool,
+    link_service: LinkService
 }
 
 impl App {
-    pub(crate) fn new(pg_pool: PgPool) -> Self {
-        App { pg_pool }
+    pub fn new(pg_pool: PgPool) -> Self {
+        let link_service = LinkService::new(pg_pool.clone());
+        Self { pg_pool, link_service }
     }
 }
 
