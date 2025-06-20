@@ -21,7 +21,7 @@ pub type BoxError = Box<dyn std::error::Error + Send + Sync>;
 #[derive(Clone)]
 pub struct App {
     pg_pool: PgPool,
-    link_service: LinkService
+    pub link_service: LinkService
 }
 
 impl App {
@@ -58,7 +58,8 @@ impl Service<Request<hyper::body::Incoming>> for App {
     type Error = BoxError;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
 
-    fn call(&self, req: Request<hyper::body::Incoming>) -> Self::Future {
+    fn call(&self, mut req: Request<hyper::body::Incoming>) -> Self::Future {
+        req.extensions_mut().insert(self.clone());
         Box::pin(router(req))
     }
 }

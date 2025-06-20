@@ -1,5 +1,14 @@
 use std::str::FromStr;
+use serde::{Deserialize, Serialize};
 
+#[derive(Deserialize)]
+pub struct LinkFields {
+    pub name: String,
+    pub description: String,
+    pub content: String,
+}
+
+#[derive(Serialize, Deserialize)]
 pub struct Link {
     pub id: i32,
     pub name: String,

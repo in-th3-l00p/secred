@@ -10,8 +10,8 @@ pub async fn router(
 ) -> Result<Response<Full<Bytes>>, BoxError>
 {
     let mut response = match (req.method(), req.uri().path()) {
-        (&Method::GET, "/api/v1/link") => crate::web::link::get(req).await?,
         (&Method::POST, "/api/v1/link") => crate::web::link::create(req).await?,
+        (&Method::GET, "/api/v1/link") => crate::web::link::get(req).await?,
         (&Method::PUT, "/api/v1/link") => crate::web::link::update(req).await?,
         (&Method::DELETE, "/api/v1/link") => crate::web::link::delete(req).await?,
         _ => {
