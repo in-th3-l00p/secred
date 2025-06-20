@@ -1,5 +1,5 @@
 use http_body_util::{Full};
-use hyper::{Request, Response, StatusCode};
+use hyper::{Method, Request, Response, StatusCode};
 use hyper::body::Bytes;
 use hyper::http::HeaderValue;
 use serde_json::json;
@@ -9,7 +9,11 @@ pub async fn router(
     req: Request<hyper::body::Incoming>
 ) -> Result<Response<Full<Bytes>>, BoxError>
 {
-    match (req.method(), req.uri().path()) {
+    let mut response = match (req.method(), req.uri().path()) {
+        (&Method::GET, "/api/v1/link") => crate::web::link::get(req).await?,
+        (&Method::POST, "/api/v1/link") => crate::web::link::create(req).await?,
+        (&Method::PUT, "/api/v1/link") => crate::web::link::update(req).await?,
+        (&Method::DELETE, "/api/v1/link") => crate::web::link::delete(req).await?,
         _ => {
             let mut response = Response::new(Full::new(
                 Bytes::from(json!({
@@ -18,12 +22,14 @@ pub async fn router(
                 }).to_string())
             ));
             *response.status_mut() = StatusCode::NOT_FOUND;
-            response.headers_mut().insert(
-                "Content-Type",
-                HeaderValue::from_static("application/json")
-            );
-
-            Ok(response)
+            response
         }
-    }
+    };
+
+    response.headers_mut().insert(
+        "Content-Type",
+        HeaderValue::from_static("application/json")
+    );
+    
+    Ok(response)
 }

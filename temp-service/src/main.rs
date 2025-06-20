@@ -1,5 +1,6 @@
 mod app;
 mod data;
+mod web;
 
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
